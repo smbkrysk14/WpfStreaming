@@ -1,0 +1,15 @@
+﻿<Window x:Class="WpfStreaming.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfStreaming"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding EnclosureUrl}" VerticalAlignment="Top" Width="500"/>
+        <Button x:Name="Play" Content="再生" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding PlayCommand}"/>
+        <Button x:Name="Stop" Content="停止" HorizontalAlignment="Left" Margin="90,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding StopCommand}"/>
+        <Button x:Name="Pause" Content="一時停止" HorizontalAlignment="Left" Margin="170,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding PauseCommand}"/>
+    </Grid>
+</Window>
