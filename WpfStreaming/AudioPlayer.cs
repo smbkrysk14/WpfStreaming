@@ -1,7 +1,9 @@
 ﻿using NAudio.Wave;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Windows;
 
 namespace WpfStreaming
 {
@@ -9,11 +11,13 @@ namespace WpfStreaming
     {
         private IWavePlayer _waveOut;
         private Stream ms = new MemoryStream();
+        Mp3FileReader reader;
+        
 
         /// <summary>
         /// 再生を開始します。
         /// </summary>
-        public void Play(string url)
+        public void PlayStreaming(string url)
         {
             if (_waveOut == null)
             {
@@ -22,7 +26,6 @@ namespace WpfStreaming
                     var response = WebRequest.Create(url).GetResponse();
                     using (var stream = response.GetResponseStream())
                     {
-
                         byte[] buffer = new byte[65536]; // 64KB chunks
 
                         int read;
@@ -34,7 +37,6 @@ namespace WpfStreaming
                             ms.Write(buffer, 0, read);
                             ms.Position = pos;
                         }
-
                     }
                 }).Start();
             }
@@ -42,25 +44,45 @@ namespace WpfStreaming
 
             // Pre-buffering some data to allow NAudio to start playing
             while (ms.Length < 65536 * 10)
-                Thread.Sleep(1000);
-
-            
-            using (Mp3FileReader reader = new Mp3FileReader(ms))
-            using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
-            using (WaveStream blockAlignedStream = new BlockAlignReductionStream(pcm))
             {
-                using (_waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
-                {
-                    _waveOut.Init(blockAlignedStream);
+                Thread.Sleep(1000);
+            }
 
-                    _waveOut.Play();
-                    while (_waveOut != null && _waveOut.PlaybackState == PlaybackState.Playing)
+            int errorCont = 0;
+
+            try
+            {
+                using (reader = new Mp3FileReader(ms))
+                using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(reader))
+                using (WaveStream blockAlignedStream = new BlockAlignReductionStream(pcm))
+                {
+                    using (_waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
                     {
-                        System.Threading.Thread.Sleep(100);
+                        _waveOut.Init(blockAlignedStream);
+                        _waveOut.Play();
+                        while (_waveOut.PlaybackState == PlaybackState.Playing)
+                        {
+                            Console.WriteLine(reader.CurrentTime);
+                            System.Threading.Thread.Sleep(100);
+                        }
+                        
                     }
                 }
             }
+            catch
+            {
+                if (errorCont > 10)
+                {
+                    roop = false;
+                    MessageBox.Show("10回Tryしましたが再生に失敗しました。");
+                }
+                errorCont++;
+            }
+
+
+
         }
+        
 
         /// <summary>
         /// 再生を一時停止します。
@@ -77,6 +99,16 @@ namespace WpfStreaming
         {
             this._waveOut.Stop();
             this.ms.Position = 0;
+        }
+
+        public void AddSec(int sec)
+        {
+            this.reader.Position += (long)(reader.WaveFormat.AverageBytesPerSecond * 10);
+        }
+
+        public void BackSec(int sec)
+        {
+            this.reader.Position += (long)(reader.WaveFormat.AverageBytesPerSecond * -10);
         }
     }
 }

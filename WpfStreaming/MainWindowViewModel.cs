@@ -20,7 +20,7 @@ namespace WpfStreaming
 
             await Task.Run(() =>
             {
-                audio.Play(enclosureUrl);
+                audio.PlayStreaming(enclosureUrl);
             });
         }
 
@@ -32,6 +32,22 @@ namespace WpfStreaming
         private void Pause()
         {
             audio.Pause();
+        }
+
+        private async void AddSec()
+        {
+            await Task.Run(() =>
+                {
+                    audio.AddSec(10);
+                });
+        }
+
+        private async void BackSec()
+        {
+            await Task.Run(() =>
+            {
+                audio.BackSec(10);
+            });
         }
 
 
@@ -73,6 +89,24 @@ namespace WpfStreaming
             get
             {
                 return _pauseCommand ?? (_pauseCommand = new DelegateCommand(Pause));
+            }
+        }
+
+        ICommand _addSecCommand;
+        public ICommand AddSecCommand
+        {
+            get
+            {
+                return _addSecCommand ?? (_addSecCommand = new DelegateCommand(AddSec));
+            }
+        }
+
+        ICommand _backSecCommand;
+        public ICommand BackSecCommand
+        {
+            get
+            {
+                return _backSecCommand ?? (_backSecCommand = new DelegateCommand(BackSec));
             }
         }
     }

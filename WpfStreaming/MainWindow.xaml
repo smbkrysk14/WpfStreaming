@@ -11,5 +11,7 @@
         <Button x:Name="Play" Content="再生" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding PlayCommand}"/>
         <Button x:Name="Stop" Content="停止" HorizontalAlignment="Left" Margin="90,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding StopCommand}"/>
         <Button x:Name="Pause" Content="一時停止" HorizontalAlignment="Left" Margin="170,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding PauseCommand}"/>
+        <Button x:Name="button" Content="10秒進む" HorizontalAlignment="Left" Margin="250,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddSecCommand}"/>
+        <Button x:Name="button_Copy" Content="10秒戻る" HorizontalAlignment="Left" Margin="330,40,0,0" VerticalAlignment="Top" Width="75" Command="{Binding BackSecCommand}"/>
     </Grid>
 </Window>
