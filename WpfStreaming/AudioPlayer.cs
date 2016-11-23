@@ -73,7 +73,6 @@ namespace WpfStreaming
             {
                 if (errorCont > 10)
                 {
-                    roop = false;
                     MessageBox.Show("10回Tryしましたが再生に失敗しました。");
                 }
                 errorCont++;
